@@ -6,6 +6,9 @@ from data_updater.find_markets import get_sel_df, get_all_markets, get_all_resul
 from gspread_dataframe import set_with_dataframe
 import traceback
 
+# Thresholds
+MAX_VOLATILITY = 40
+
 # Initialize global variables
 spreadsheet = get_spreadsheet()
 client = get_clob_client()
@@ -107,7 +110,7 @@ def fetch_and_process_data():
 
     
     volatility_df = new_df.copy()
-    volatility_df = volatility_df[new_df['volatility_sum'] < 20]
+    volatility_df = volatility_df[new_df['volatility_sum'] < MAX_VOLATILITY]
     # volatility_df = sort_df(volatility_df)
     volatility_df = volatility_df.sort_values('gm_reward_per_100', ascending=False)
    
