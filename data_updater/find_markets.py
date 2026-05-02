@@ -223,7 +223,7 @@ def get_all_results(all_df, client, max_workers=5):
     def process_with_progress(args):
         idx, row = args
         try:
-            random_delay = random.uniform(0.2, 0.7)
+            random_delay = random.uniform(0.1, 0.3)
             time.sleep(random_delay)
             return process_single_row(row, client)
         except Exception as e:
