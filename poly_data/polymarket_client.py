@@ -9,6 +9,7 @@ from py_clob_client_v2.clob_types import (
     PartialCreateOrderOptions,
     OpenOrderParams,
 )
+from py_clob_client_v2.order_utils import SignatureTypeV2
 
 # Web3 libraries for blockchain interaction
 from web3 import Web3
@@ -58,13 +59,18 @@ class PolymarketClient:
         chain_id=137
         self.browser_wallet=Web3.to_checksum_address(browser_address)
 
+        # Browser-based Polymarket accounts use a Poly proxy wallet as the
+        # funder. Signing them as a Gnosis Safe makes the CLOB reject orders
+        # with "invalid signature".
+        signature_type = int(os.getenv("POLYMARKET_SIGNATURE_TYPE", SignatureTypeV2.POLY_PROXY))
+
         # Initialize the Polymarket API client
         self.client = ClobClient(
             host=host,
             chain_id=chain_id,
             key=key,
             funder=self.browser_wallet,
-            signature_type=2
+            signature_type=signature_type
         )
 
         # Set up API credentials. Prefer deriving existing credentials because
