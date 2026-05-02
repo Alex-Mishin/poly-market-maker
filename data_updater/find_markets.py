@@ -223,8 +223,8 @@ def get_all_results(all_df, client, max_workers=5):
         idx, row = args
         try:
             return process_single_row(row, client)
-        except:
-            print("error fetching market")
+        except Exception as e:
+            print(f"error fetching market: {e}")
             return None
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
