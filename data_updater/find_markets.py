@@ -3,6 +3,7 @@ import numpy as np
 import os
 import requests
 import time
+import random
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -222,6 +223,8 @@ def get_all_results(all_df, client, max_workers=5):
     def process_with_progress(args):
         idx, row = args
         try:
+            random_delay = random.uniform(0.2, 0.7)
+            time.sleep(random_delay)
             return process_single_row(row, client)
         except Exception as e:
             print(f"error fetching market: {e}")
