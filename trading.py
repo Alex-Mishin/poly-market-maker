@@ -351,7 +351,20 @@ async def perform_trade(market):
                 # 1. Position is less than max_size (new logic)
                 # 2. Position is less than absolute cap (250)
                 # 3. Buy amount is above minimum size
-                if position < max_size and position < 250 and buy_amount > 0 and buy_amount >= row['min_size']:
+                can_place_buy = position < max_size and position < 250 and buy_amount > 0 and buy_amount >= row['min_size']
+
+                if buy_amount > 0 and not can_place_buy:
+                    buy_blockers = []
+                    if position >= max_size:
+                        buy_blockers.append(f"position {position} is at/above max_size {max_size}")
+                    if position >= 250:
+                        buy_blockers.append(f"position {position} is at/above absolute cap 250")
+                    if buy_amount < row['min_size']:
+                        buy_blockers.append(f"buy_amount {buy_amount} is below min_size {row['min_size']}")
+
+                    print(f"Not sending a buy order because {'; '.join(buy_blockers)}")
+
+                if can_place_buy:
                     # Get reference price from market data
                     sheet_value = row['best_bid']
 
